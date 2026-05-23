@@ -1,0 +1,4 @@
+Django>=4.2,<5.2
+gunicorn
+whitenoise
+dj-database-url

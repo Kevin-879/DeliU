@@ -1,0 +1,53 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Carrito — DeliU{% endblock %}
+{% block content %}
+<h1>🛒 Tu carrito</h1>
+{% if pedido and pedido.items.exists %}
+<div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start">
+  <div class="card">
+    <table>
+      <thead><tr><th>Producto</th><th>Precio unit.</th><th>Cantidad</th><th>Subtotal</th><th></th></tr></thead>
+      <tbody>
+      {% for item in pedido.items.all %}
+      <tr>
+        <td><strong>{{ item.producto.nombre }}</strong></td>
+        <td>${{ item.producto.precio }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.subtotal }}</td>
+        <td>
+          <a href="{% url 'eliminar_item' item.pk %}" class="btn btn-danger" style="padding:.25rem .6rem;font-size:.8rem"
+             onclick="return confirm('¿Eliminar este producto?')">✕</a>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <div class="card" style="margin-bottom:1rem">
+      <h2>Resumen</h2>
+      <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;margin-bottom:1rem">
+        <span>Total</span><span>${{ pedido.total }}</span>
+      </div>
+      <form method="post" action="{% url 'actualizar_notas' pedido.pk %}">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-outline" style="width:100%">Guardar notas</button>
+      </form>
+    </div>
+    <a href="{% url 'pagar' pedido.pk %}" class="btn btn-success" style="width:100%;text-align:center;display:block;padding:.8rem">
+      Proceder al pago →
+    </a>
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center;padding:3rem;color:var(--muted)">
+  Tu carrito está vacío. <a href="{% url 'menu' %}">Ver menú</a>
+</div>
+{% endif %}
+{% endblock %}

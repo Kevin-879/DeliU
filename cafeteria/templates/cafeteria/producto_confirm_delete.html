@@ -1,0 +1,17 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Eliminar producto — DeliU{% endblock %}
+{% block content %}
+<div style="max-width:480px">
+  <div class="card">
+    <h1>Eliminar producto</h1>
+    <p style="margin:1rem 0">¿Confirmas eliminar <strong>{{ object.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div style="display:flex;gap:.75rem">
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'admin_productos' %}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

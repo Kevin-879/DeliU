@@ -1,0 +1,30 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Admin Productos — DeliU{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+  <h1>Gestión de productos</h1>
+  <div style="display:flex;gap:.75rem">
+    <a href="{% url 'admin_pedidos' %}" class="btn btn-outline">Ver pedidos</a>
+    <a href="{% url 'producto_crear' %}" class="btn btn-primary">+ Nuevo producto</a>
+  </div>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Disponible</th><th>Acciones</th></tr></thead>
+    <tbody>
+    {% for p in productos %}
+    <tr>
+      <td><strong>{{ p.nombre }}</strong></td>
+      <td>{{ p.categoria|default:"—" }}</td>
+      <td>${{ p.precio }}</td>
+      <td>{% if p.disponible %}✅{% else %}❌{% endif %}</td>
+      <td style="display:flex;gap:.5rem">
+        <a href="{% url 'producto_editar' p.pk %}" class="btn btn-outline" style="padding:.3rem .7rem;font-size:.82rem">Editar</a>
+        <a href="{% url 'producto_eliminar' p.pk %}" class="btn btn-danger" style="padding:.3rem .7rem;font-size:.82rem">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

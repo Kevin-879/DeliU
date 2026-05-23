@@ -1,0 +1,36 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Pedido #{{ pedido.pk }} — DeliU{% endblock %}
+{% block content %}
+<a href="{% url 'mis_pedidos' %}" style="color:var(--muted);font-size:.9rem">← Mis pedidos</a>
+<div style="margin-top:1rem;display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start">
+  <div class="card">
+    <h1>Pedido #{{ pedido.pk }}</h1>
+    <p class="text-muted" style="margin-bottom:1rem">{{ pedido.fecha_creacion|date:"d/m/Y H:i" }}</p>
+    <table>
+      <thead><tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+      <tbody>
+      {% for item in pedido.items.all %}
+      <tr>
+        <td>{{ item.producto.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.subtotal }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div style="text-align:right;font-weight:700;font-size:1.1rem;margin-top:1rem">Total: ${{ pedido.total }}</div>
+    {% if pedido.notas %}<p style="margin-top:1rem;color:var(--muted)"><strong>Notas:</strong> {{ pedido.notas }}</p>{% endif %}
+  </div>
+  <div class="card">
+    <h2>Estado</h2>
+    <p><span class="badge badge-{{ pedido.estado }}" style="font-size:1rem;padding:.4rem 1rem">{{ pedido.get_estado_display }}</span></p>
+    {% if pedido.pago %}
+    <hr style="margin:1rem 0;border:none;border-top:1px solid var(--border)">
+    <h2>Pago</h2>
+    <p class="text-muted">Referencia: <strong>{{ pedido.pago.referencia }}</strong></p>
+    <p class="text-muted">Método: {{ pedido.pago.get_metodo_display }}</p>
+    <p class="text-muted">Estado: <strong>{{ pedido.pago.get_estado_display }}</strong></p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

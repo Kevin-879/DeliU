@@ -1,0 +1,44 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Pago — DeliU{% endblock %}
+{% block content %}
+<h1>💳 Confirmar pago</h1>
+<div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start">
+  <div class="card">
+    <h2>Resumen del pedido</h2>
+    <table>
+      <thead><tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+      <tbody>
+      {% for item in pedido.items.all %}
+      <tr>
+        <td>{{ item.producto.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.subtotal }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div style="text-align:right;font-size:1.15rem;font-weight:700;margin-top:1rem">
+      Total: ${{ pedido.total }}
+    </div>
+  </div>
+  <div class="card">
+    <h2>Método de pago</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:var(--danger);font-size:.82rem">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success" style="width:100%;margin-top:.5rem">
+        Confirmar y pagar ${{ pedido.total }}
+      </button>
+    </form>
+    <a href="{% url 'carrito' %}" class="btn btn-outline" style="width:100%;text-align:center;display:block;margin-top:.75rem">
+      ← Volver al carrito
+    </a>
+  </div>
+</div>
+{% endblock %}

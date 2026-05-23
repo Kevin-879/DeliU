@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}DeliU{% endblock %}</title>
+<style>
+  :root{--primary:#2563eb;--primary-dark:#1d4ed8;--accent:#f59e0b;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--danger:#ef4444;--success:#22c55e;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  a{color:var(--primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  nav{background:var(--primary);color:#fff;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+  .nav-brand{font-size:1.4rem;font-weight:700;color:#fff;letter-spacing:-0.5px}
+  .nav-links{display:flex;gap:1rem;align-items:center}
+  .nav-links a{color:#e0e7ff;font-size:.92rem;padding:.3rem .5rem;border-radius:4px;transition:background .2s}
+  .nav-links a:hover{background:rgba(255,255,255,.15);text-decoration:none;color:#fff}
+  .nav-links .btn-nav{background:var(--accent);color:#fff;padding:.35rem .9rem;border-radius:6px;font-weight:600}
+  .nav-links .btn-nav:hover{background:#d97706}
+  main{max-width:1100px;margin:2rem auto;padding:0 1.5rem}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .btn{display:inline-block;padding:.5rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;border:none;transition:opacity .15s}
+  .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark);text-decoration:none;color:#fff}
+  .btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{opacity:.85;text-decoration:none;color:#fff}
+  .btn-success{background:var(--success);color:#fff}.btn-success:hover{opacity:.85;text-decoration:none;color:#fff}
+  .btn-outline{background:#fff;color:var(--primary);border:1px solid var(--primary)}.btn-outline:hover{background:#eff6ff;text-decoration:none}
+  .messages{margin:1rem 0}
+  .message{padding:.75rem 1rem;border-radius:8px;margin-bottom:.5rem;font-size:.9rem}
+  .message.success{background:#dcfce7;color:#166534}
+  .message.error{background:#fee2e2;color:#991b1b}
+  .message.info{background:#dbeafe;color:#1e40af}
+  h1{font-size:1.8rem;font-weight:700;margin-bottom:1rem}
+  h2{font-size:1.3rem;font-weight:600;margin-bottom:.75rem}
+  .form-group{margin-bottom:1rem}
+  label{display:block;font-size:.88rem;font-weight:600;color:var(--muted);margin-bottom:.3rem}
+  input,select,textarea{width:100%;padding:.55rem .8rem;border:1px solid var(--border);border-radius:8px;font-size:.95rem;background:#fff;transition:border-color .2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)}
+  .badge{display:inline-block;padding:.2rem .65rem;border-radius:999px;font-size:.78rem;font-weight:600}
+  .badge-pendiente{background:#fef3c7;color:#92400e}
+  .badge-en_preparacion{background:#dbeafe;color:#1e40af}
+  .badge-listo{background:#dcfce7;color:#166534}
+  .badge-entregado{background:#f1f5f9;color:#475569}
+  .badge-cancelado{background:#fee2e2;color:#991b1b}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border);font-size:.92rem}
+  th{font-weight:600;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.05em}
+  tr:hover td{background:#f8fafc}
+  .grid-productos{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem}
+  .producto-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;gap:.5rem;transition:box-shadow .2s}
+  .producto-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+  .precio{font-size:1.2rem;font-weight:700;color:var(--primary)}
+  .text-muted{color:var(--muted);font-size:.88rem}
+</style>
+</head>
+<body>
+<nav>
+  <a href="{% url 'menu' %}" class="nav-brand">🍽 DeliU</a>
+  <div class="nav-links">
+    <a href="{% url 'menu' %}">Menú</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'carrito' %}">🛒 Carrito</a>
+      <a href="{% url 'mis_pedidos' %}">Mis pedidos</a>
+      {% if user.is_staff %}
+        <a href="{% url 'admin_productos' %}">Panel Admin</a>
+      {% endif %}
+      <form method="post" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" style="background:none;border:none;color:#e0e7ff;font-size:.92rem;padding:.3rem .5rem;border-radius:4px;cursor:pointer;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.15)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='#e0e7ff'">Salir ({{ user.first_name|default:user.username }})</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">Iniciar sesión</a>
+      {% if registro_disponible %}
+      <a href="{% url 'registro' %}" class="btn-nav">Registrarse</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</nav>
+<main>
+  {% if messages %}
+  <div class="messages">
+    {% for msg in messages %}
+    <div class="message {{ msg.tags }}">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

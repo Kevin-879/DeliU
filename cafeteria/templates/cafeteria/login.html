@@ -1,0 +1,24 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Iniciar sesión — DeliU{% endblock %}
+{% block content %}
+<div style="max-width:400px;margin:0 auto">
+  <div class="card">
+    <h1>Iniciar sesión</h1>
+    <form method="post">
+      <input type="hidden" name="next" value="{{ next }}" />
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:var(--danger);font-size:.82rem">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:.5rem">Entrar</button>
+    </form>
+    <p style="margin-top:1rem;text-align:center;font-size:.9rem;color:var(--muted)">
+      ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}Mis pedidos — DeliU{% endblock %}
+{% block content %}
+<h1>Mis pedidos</h1>
+{% if pedidos %}
+<div class="card">
+  <table>
+    <thead><tr><th>#</th><th>Fecha</th><th>Estado</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+    {% for p in pedidos %}
+    <tr>
+      <td>#{{ p.pk }}</td>
+      <td>{{ p.fecha_creacion|date:"d/m/Y H:i" }}</td>
+      <td><span class="badge badge-{{ p.estado }}">{{ p.get_estado_display }}</span></td>
+      <td>${{ p.total }}</td>
+      <td><a href="{% url 'pedido_detalle' p.pk %}" class="btn btn-outline" style="padding:.3rem .7rem;font-size:.82rem">Ver</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card" style="text-align:center;padding:3rem;color:var(--muted)">
+  No tienes pedidos aún. <a href="{% url 'menu' %}">Ver menú</a>
+</div>
+{% endif %}
+{% endblock %}

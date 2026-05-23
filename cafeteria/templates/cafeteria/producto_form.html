@@ -1,0 +1,23 @@
+{% extends 'cafeteria/base.html' %}
+{% block title %}{% if object %}Editar{% else %}Nuevo{% endif %} Producto — DeliU{% endblock %}
+{% block content %}
+<div style="max-width:560px">
+  <h1>{% if object %}Editar{% else %}Nuevo{% endif %} producto</h1>
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:var(--danger);font-size:.82rem">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <div style="display:flex;gap:.75rem;margin-top:.5rem">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'admin_productos' %}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
