@@ -92,3 +92,9 @@ if 'DATABASE_URL' in os.environ:
 
 SECRET_KEY = os.environ.get('SECRET_KEY', SECRET_KEY)
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+import os
+
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS', 
+    'https://web-production-45509.up.railway.app'
+).split(',')
